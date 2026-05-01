@@ -29,6 +29,39 @@ npm run dev
 
 服务默认监听 `http://localhost:3100`，打开浏览器访问即可进入管理界面。
 
+### Docker 镜像打包
+
+```bash
+docker build -t bili-cookie-manager:latest .
+```
+
+### 使用 Docker CLI 运行
+
+```bash
+docker run -d \
+  --name bili-cookie-manager \
+  --restart unless-stopped \
+  -p 3100:3100 \
+  -v "$(pwd)/data:/app/data" \
+  -e PORT=3100 \
+  bili-cookie-manager:latest
+```
+
+运行后访问 `http://localhost:3100` 即可进入管理界面。
+
+如需限制跨域来源，可额外传入环境变量：
+
+```bash
+docker run -d \
+  --name bili-cookie-manager \
+  --restart unless-stopped \
+  -p 3100:3100 \
+  -v "$(pwd)/data:/app/data" \
+  -e PORT=3100 \
+  -e ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080 \
+  bili-cookie-manager:latest
+```
+
 ### 添加账号
 
 1. 打开 `http://localhost:3100`
