@@ -39,12 +39,12 @@ docker build -t nakiripolaris/unia-bilicookie:latest .
 
 ```bash
 docker run -d \
-  --name bili-cookie-manager \
+  --name unia-bilicookie \
   --restart unless-stopped \
   -p 3100:3100 \
   -v "$(pwd)/data:/app/data" \
   -e PORT=3100 \
-  bili-cookie-manager:latest
+  nakiripolaris/unia-bilicookie:v1.0.1
 ```
 
 运行后访问 `http://localhost:3100` 即可进入管理界面。
