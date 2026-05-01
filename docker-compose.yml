@@ -1,0 +1,20 @@
+services:
+  bili-cookie-manager:
+    build: .
+    container_name: bili-cookie-manager
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      # 持久化账号数据（含 Cookie），映射到宿主机目录
+      - ./data:/app/data
+    environment:
+      - PORT=3100
+      # 允许跨域访问的来源，多个用逗号分隔，留空则允许所有
+      # - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3100/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

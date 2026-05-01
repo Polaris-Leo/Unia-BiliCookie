@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "accounts": [],
+  "settings": {
+    "validateInterval": 21600,
+    "autoValidate": true
+  }
+}

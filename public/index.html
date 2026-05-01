@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B站 Cookie 管理</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <div class="header-inner container">
+      <div class="header-brand">
+        <!-- Bilibili 风格图标 -->
+        <svg class="brand-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+          <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.248-.248.549-.372.906-.372.356 0 .658.124.906.372L7.027 4.653h9.946l1.468-1.454c.249-.248.551-.372.907-.372s.658.124.906.372l.027.027c.249.249.373.551.373.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+        </svg>
+        <div>
+          <h1 class="brand-title">Cookie 管理工具</h1>
+          <p class="brand-subtitle">B站多账号管理，防止单一账号失效导致服务中断</p>
+        </div>
+      </div>
+      <div class="service-status" id="service-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">连接中...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Main ===== -->
+  <main class="main">
+    <div class="container">
+
+      <!-- 统计栏 -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value" id="stat-total">—</span>
+          <span class="stat-label">账号总数</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <span class="stat-value text-success" id="stat-valid">—</span>
+          <span class="stat-label">有效</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <span class="stat-value text-error" id="stat-invalid">—</span>
+          <span class="stat-label">已失效</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item stream-status-item">
+          <span class="stream-dot-wrap">
+            <span class="stream-dot stream-dot-connecting" id="stream-dot"></span>
+          </span>
+          <span class="stat-label" id="stream-text">连接中...</span>
+        </div>
+      </div>
+
+      <!-- 账号列表 -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">账号列表</h2>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="showAddModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              添加账号
+            </button>
+          </div>
+        </div>
+        <div id="accounts-container" class="accounts-container">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>加载中...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- API 接口文档 -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">API 接口</h2>
+        </div>
+        <div class="api-grid">
+          <div class="api-card highlight">
+            <div class="api-card-header">
+              <span class="badge badge-get">GET</span>
+              <code class="api-path">/api/accounts/cookie</code>
+            </div>
+            <p class="api-desc">获取一个当前有效的 Cookie（自动轮换，外部服务集成入口）</p>
+            <div class="code-snippet">
+              <span class="code-snippet-label">响应示例</span>
+              <pre>{ "success": true, "data": { "uid": "123456", "username": "用户名", "cookies": { "SESSDATA": "...", "bili_jct": "...", ... } } }</pre>
+            </div>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="badge badge-get">GET</span>
+              <code class="api-path">/api/accounts</code>
+            </div>
+            <p class="api-desc">获取所有账号列表（不含 Cookie 值）</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="badge badge-post">POST</span>
+              <code class="api-path">/api/accounts/validate-all</code>
+            </div>
+            <p class="api-desc">触发所有账号 Cookie 验证，返回验证汇总</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="badge badge-get">GET</span>
+              <code class="api-path">/api/accounts/:uid/cookie</code>
+            </div>
+            <p class="api-desc">获取指定账号的 Cookie（含 Cookie 值）</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="badge badge-post">POST</span>
+              <code class="api-path">/api/accounts/:uid/validate</code>
+            </div>
+            <p class="api-desc">验证单个账号 Cookie 有效性</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="badge badge-delete">DELETE</span>
+              <code class="api-path">/api/accounts/:uid</code>
+            </div>
+            <p class="api-desc">删除指定账号</p>
+          </div>
+        </div>
+
+        <div class="integration-card">
+          <h3>与 Unia-Danmuku 集成</h3>
+          <p>在 Unia-Danmuku 中，可以在需要获取 Cookie 时调用本服务的接口，实现多账号自动故障转移。当当前 Cookie 失效时，本服务会自动返回下一个有效账号的 Cookie。</p>
+          <div class="code-snippet">
+            <span class="code-snippet-label">curl 示例</span>
+            <pre>curl http://localhost:3100/api/accounts/cookie</pre>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== 添加账号弹窗 ===== -->
+  <div class="modal-overlay hidden" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">扫码登录 B站</h3>
+        <button class="modal-close" onclick="closeModal()" aria-label="关闭弹窗">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="qr-container" class="qr-container">
+          <div class="qr-loading">
+            <div class="spinner"></div>
+            <p>生成二维码中...</p>
+          </div>
+        </div>
+        <div class="qr-status-area">
+          <p id="qr-status-text" class="qr-status-text">请使用 B站 APP 扫描上方二维码</p>
+          <p class="qr-hint">扫码后在手机上确认登录，Cookie 将自动保存到本服务</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 确认删除弹窗 ===== -->
+  <div class="modal-overlay hidden" id="confirm-overlay" role="dialog" aria-modal="true">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>确认删除</h3>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-text">确定要删除此账号吗？</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeConfirm()">取消</button>
+        <button class="btn btn-danger" id="confirm-btn">删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Toast 容器 ===== -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
