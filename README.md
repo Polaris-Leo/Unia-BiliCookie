@@ -1,4 +1,4 @@
-# bili-cookie-manager
+# Unia-BiliCookie
 
 B站多账号 Cookie 管理工具。支持扫码登录多个账号，自动验证 Cookie 有效性，并提供统一的 HTTP API 供其他服务（如 Unia-Danmuku）调用，实现当单一账号 Cookie 失效时的自动故障转移。
 
@@ -32,7 +32,7 @@ npm run dev
 ### Docker 镜像打包
 
 ```bash
-docker build -t bili-cookie-manager:latest .
+docker build -t nakiripolaris/unia-bilicookie:latest .
 ```
 
 ### 使用 Docker CLI 运行
