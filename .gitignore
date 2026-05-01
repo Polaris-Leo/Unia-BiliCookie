@@ -5,3 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Runtime data
+/data/accounts.json
+
+# Local Claude settings
+/.claude/settings.local.json

@@ -49,15 +49,15 @@ export function loadData() {
 /**
  * 将数据持久化写入文件
  * @param {Object} data
- * @returns {boolean}
  */
 export function saveData(data) {
   try {
     ensureDataDir();
     fs.writeFileSync(ACCOUNTS_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    return true;
   } catch (error) {
     console.error('❌ 保存数据失败:', error.message);
-    return false;
+    console.error('   文件路径:', ACCOUNTS_FILE);
+    console.error('   请检查目录权限（Docker 挂载卷常见问题）');
+    throw error;
   }
 }
